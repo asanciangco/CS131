@@ -1,0 +1,62 @@
+subset: simple implementation that utilizes List module functions.
+ 
+proper_subset: utilize the previously made subset, logic dictates that if 
+	the two sets are subsets of each other, they are equal and therefore
+	not proper subsets.
+
+equal_sets: using the logic above, if sets are subsets of each other they are 
+	equal.
+
+set_diff: This recursive function removes any element that is found in the
+	second set, returning the difference.
+
+computed_fixed_point: recursive algorithm checks if x is equal to (f x)
+	continually until fixed point is found. Weakness: possibly to run 
+	until infinity.
+
+compound: a helper function for computed_periodic_point, recursively calls
+	function f p times on its values.
+
+computed_periodic_point: like computed_fixed_point except it checks if x is 
+	equal to (compound f p x) rather than (f x). Weakness: can also run
+	until infinity.
+
+NOTE: I was unfortunately unable to get all the functions of my solution
+	of filter_blind_alleys working correctly. Right now the "meat" of my
+	soultion is supposed to take place in "resolve", which is meant to 
+	filter out any invalid rules. I encountered a type Error that I could
+	not resolve that prevented me from finishing my solution.
+
+pull: meant to convert a symbol into its either nonterminal or terminal 
+	components. Works as expected.
+
+is_sub_terminal: takes a symbol and determines if it is terminal or not
+	(returns bool)
+
+is_terminal: like is_sub_terminal, except that it works on a list of symbols.
+	Will return true iff list length is 1 and the one element is terminal.
+
+strip_terminals: This is where the main error occurs. It is meant to take a 
+	list of symbols and remove any terminals. The goal was for the	
+	resulting list to contain only "awksub_nonterminals" or whatever
+	the non terminal type was, but I couldn't implement that, which 
+	propogated errors to my other helper functions.
+
+is_good: takes a list of nonterminals found to terminate eventually 'g' and 
+	compares a rule 'r' against it. If all the elements of the RHS are 
+	found in 'g', then the rule is not a blind alley and is considered 
+	"good"
+
+add_rule: helper function meant to add the nonterminal to the list of valid
+	nonterminals.
+
+resolve: meant to recursively traverse a list of rules (grammar). On the
+	first "pass", it would add any LHS  whose only RHS are terminals
+	to the list of "good" or valid rules. If a rule is not considered "good"
+	it checks it against resolve called on the remaining elements of the 
+	grammar. This way, it utilizes recursion to eliminate any blind alley
+	rules.
+
+Logially, my solution is complete and should work. However, since I encountered
+	and error that neither I nor the TA at office hours could overcome,
+	I was unable to finish my solution and properly test it. 
