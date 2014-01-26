@@ -1,6 +1,6 @@
 (* HW2 Test file *)
 
-
+(*** TEST VALUES ***)
 
 type awksub_nonterminals =
   | Expr | Lvalue | Incrop | Binop | Num
@@ -28,30 +28,7 @@ let awksub_rules =
     Num, [T"8"];
     Num, [T"9"]]
 	
-let awksub_grammar1 = (Expr, awksub_rules)
-
-let awksub_grammar2 =
-	(Expr, function
-		| Expr ->
-			[[T"("; N Expr; T")"];
-			 [N Num];
-			 [N Expr; N Binop; N Expr];
-			 [N Lvalue];
-			 [N Incrop; N Lvalue];
-			 [N Lvalue; N Incrop]]
-		| Lvalue ->
-			[[T"$"; N Expr]]
-		| Incrop ->
-			[[T"++"];
-			[T"--"]]
-		| Binop ->
-			[[T"+"];
-			 [T"-"]]
-		| Num ->
-			[[T"0"]; [T"1"]; [T"2"]; [T"3"]; [T"4"];
-			 [T"5"]; [T"6"]; [T"7"]; [T"8"]; [T"9"]])
-	
-let awksub_rules_minus_Num =
+	let awksub_rules_minus_Num =
    [Expr, [T"("; N Expr; T")"];
     Expr, [N Num];
     Expr, [N Expr; N Binop; N Expr];
@@ -70,28 +47,8 @@ let awksub_rules_minus_Num_and_Expr =
     Incrop, [T"--"];
     Binop, [T"+"];
     Binop, [T"-"]]
-(*	
-let strip_nonterminal_test0 = 
-		strip_nonterminal Num awksub_rules = awksub_rules_minus_Num
-let strip_nontermianl_test1 = 
-		strip_nonterminal Expr (strip_nonterminal Num awksub_rules) 
-		= awksub_rules_minus_Num_and_Expr
-*)
-let generate_grammar_rule_list_test0 = 
-		generate_grammar_rule_list awksub_rules Num 
-		= [[T "0"]; [T "1"]; [T "2"]; [T "3"]; [T "4"];
-		[T "5"]; [T "6"]; [T "7"]; [T "8"]; [T "9"]]
-		
-let generate_grammar_rule_list_test1 =
-		generate_grammar_rule_list awksub_rules Expr
-		= [[T "("; N Expr; T ")"]; [N Num]; [N Expr; N Binop; N Expr]; [N Lvalue];
-		[N Incrop; N Lvalue]; [N Lvalue; N Incrop]]
 
-let generate_grammar_rule_list_test2 = 
-		generate_grammar_rule_list awksub_rules
-
-let convert_grammar_test0 = (convert_grammar awksub_grammar1)
-(*
+let awksub_grammar1 = (Expr, awksub_rules)
 
 let accept_all derivation string = Some (derivation, string)
 let accept_empty_suffix derivation = function
@@ -132,13 +89,42 @@ let awkish_grammar =
 	 [[T"0"]; [T"1"]; [T"2"]; [T"3"]; [T"4"];
 	  [T"5"]; [T"6"]; [T"7"]; [T"8"]; [T"9"]])
 
+let rec contains_lvalue = function
+  | [] -> false
+  | (Lvalue,_)::_ -> true
+  | _::rules -> contains_lvalue rules
+
+let accept_only_non_lvalues rules frag =
+  if contains_lvalue rules
+  then None
+  else Some (rules, frag)
+	  
+(*** TEST FUNCTIONS ***)
+	  
+let generate_grammar_rule_list_test0 = 
+		generate_grammar_rule_list awksub_rules Num 
+		= [[T "0"]; [T "1"]; [T "2"]; [T "3"]; [T "4"];
+		[T "5"]; [T "6"]; [T "7"]; [T "8"]; [T "9"]]
+		
+let generate_grammar_rule_list_test1 =
+		generate_grammar_rule_list awksub_rules Expr
+		= [[T "("; N Expr; T ")"]; [N Num]; [N Expr; N Binop; N Expr]; [N Lvalue];
+		[N Incrop; N Lvalue]; [N Lvalue; N Incrop]]
+
+(*
+let generate_grammar_rule_list_test2 = 
+		generate_grammar_rule_list awksub_rules
+
+let convert_grammar_test0 = (convert_grammar awksub_grammar1)
+*)
+	  
 let test0 =
   ((parse_prefix awkish_grammar accept_all ["ouch"]) = None)
 
 let test1 =
   ((parse_prefix awkish_grammar accept_all ["9"])
    = Some ([(Expr, [N Term]); (Term, [N Num]); (Num, [T "9"])], []))
-
+   
 let test2 =
   ((parse_prefix awkish_grammar accept_all ["9"; "+"; "$"; "1"; "+"])
    = Some
@@ -198,16 +184,6 @@ let test4 =
        (Binop, [T "+"]); (Expr, [N Term]); (Term, [N Num]); (Num, [T "0"])],
       []))
 
-let rec contains_lvalue = function
-  | [] -> false
-  | (Lvalue,_)::_ -> true
-  | _::rules -> contains_lvalue rules
-
-let accept_only_non_lvalues rules frag =
-  if contains_lvalue rules
-  then None
-  else Some (rules, frag)
-
 let test5 =
   ((parse_prefix awkish_grammar accept_only_non_lvalues
       ["3"; "-"; "4"; "+"; "$"; "5"; "-"; "6"])
@@ -216,4 +192,10 @@ let test5 =
 	(Binop, [T "-"]); (Expr, [N Term]); (Term, [N Num]); (Num, [T "4"])],
        ["+"; "$"; "5"; "-"; "6"]))
 
-*)
+let test_1 = (parse_prefix awkish_grammar accept_all ["6"; "+"; "9"])
+	   
+let test1_result =
+  (parse_prefix awkish_grammar accept_all ["9"])
+  
+let test2_result =
+  (parse_prefix awkish_grammar accept_all ["9"; "+"; "$"; "1"; "+"]);;
