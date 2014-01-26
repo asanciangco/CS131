@@ -47,20 +47,20 @@ let rec check_rhs gram rhs acc d frag =
 				then	(check_rhs gram t_tail acc d t)
 				else	None
 
-(* CHECK_REST *
+(* CHECK_RULES *
  * Recursively iterates through rules for a given non-terminal to see if
  * any are valid. If one is found, it returns it. If not, it checks the next
  * rule. If none are found (called on an empty list) returns 'None'. *)
-and check_rest gram nt rhs acc d frag =
+and check_rules gram nt rhs acc d frag =
 	if		rhs = [] 
 	then 	None 
 	else 	match rhs with
 		| h::t	-> match (check_rhs gram h acc (d@[(nt, h)]) frag) with
 			| Some(a, b)	-> Some(a, b)
-			| None 			-> (check_rest gram nt t acc d frag)
+			| None 			-> (check_rules gram nt t acc d frag)
 (* MATCHER *
  * Helper function used to initiate mutually recursive parse of input 'frag'. *)
-and matcher gram nt acc d frag = (check_rest gram nt (gram nt) acc d frag)
+and matcher gram nt acc d frag = (check_rules gram nt (gram nt) acc d frag)
 
 (********************)
 (*** Parse_Prefix ***)
@@ -68,7 +68,7 @@ and matcher gram nt acc d frag = (check_rest gram nt (gram nt) acc d frag)
 
 (* PARSE_PREFIX *
  * Behaves as described by Homework 2 spec. Implemented using 2 mutually
- * recurseive functions: check_rest and check_rhs. check_rest checks the rules
+ * recurseive functions: check_rules and check_rhs. check_rules checks the rules
  * of a given non-terminal and check_rhs checks all the elements of a given
  * rule. *)
 let rec parse_prefix (start_symbol, gram) acc frag =

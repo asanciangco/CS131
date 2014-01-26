@@ -1,0 +1,18 @@
+I solved the problem the way I did because it realized it was necessary to 
+utilize mutual recursion to both check the possible success of various rules
+for a given non-terminal, as well as check the success of each element of a 
+given rhs. This goes along the two parsers we talked about in class: the "or" 
+parser and the "and" parser. The "or" parser is essentially the check_rules
+function, it iterates through possible rhs's for a given non terminal, expanding
+each element. If any one fails, it moves on to the next one until all option are
+exhausted (it only needs one success). The "and" parser is essentially the
+check_rhs function, iterating through each element of a given rule, expanding
+any non-terminals. If a terminal is found, it makes sure that it corresponds to
+the given token of frag. If any one fails, the entire rhs is considered to fail.
+
+convert_grammar needs to make a function that returns all rules that correspond
+to a given nonterminal. When calling this curried function with no nonterminal
+input, it becomes the function that appears as the second part of the tuple in 
+the homework 2 style grammar. A homework 2 style grammar is then just the 
+starting symbol from the homework 1 style grammar, tupled with the resulting
+aforementioned function. 

@@ -28,27 +28,46 @@ let awksub_rules =
     Num, [T"8"];
     Num, [T"9"]]
 	
-	let awksub_rules_minus_Num =
+
+(* homework 1 grammar*)
+let awksub_grammar1 = (Expr, awksub_rules)
+let awksub_grammar1_converted = convert_grammar awksub_grammar1
+
+let my_rules =
    [Expr, [T"("; N Expr; T")"];
-    Expr, [N Num];
-    Expr, [N Expr; N Binop; N Expr];
     Expr, [N Lvalue];
     Expr, [N Incrop; N Lvalue];
+	Expr, [N Num];
     Expr, [N Lvalue; N Incrop];
     Lvalue, [T"$"; N Expr];
     Incrop, [T"++"];
     Incrop, [T"--"];
-    Binop, [T"+"];
-    Binop, [T"-"]]
+    Num, [T"a"];
+    Num, [T"b"];
+    Num, [T"c"];
+    Num, [T"d"];
+    Num, [T"e"];
+    Num, [T"f"];
+    Num, [T"g"];
+    Num, [T"h"];
+    Num, [T"i"];
+    Num, [T"j"]]
 	
-let awksub_rules_minus_Num_and_Expr =
-   [Lvalue, [T"$"; N Expr];
-    Incrop, [T"++"];
-    Incrop, [T"--"];
-    Binop, [T"+"];
-    Binop, [T"-"]]
+let my_grammar = (Expr, my_rules)
 
-let awksub_grammar1 = (Expr, awksub_rules)
+type giant_nonterminals =
+  | Conversation | Sentence | Grunt | Snore | Shout | Quiet
+let giant_grammar =
+  Conversation,
+  [Snore, [T"ZZZ"];
+   Quiet, [];
+   Grunt, [T"khrgh"];
+   Shout, [T"aooogah!"];
+   Sentence, [N Quiet];
+   Sentence, [N Grunt];
+   Sentence, [N Shout];
+   Conversation, [N Snore];
+   Conversation, [N Sentence; T","; N Conversation]]
 
 let accept_all derivation string = Some (derivation, string)
 let accept_empty_suffix derivation = function
@@ -108,8 +127,8 @@ let generate_grammar_rule_list_test0 =
 		
 let generate_grammar_rule_list_test1 =
 		generate_grammar_rule_list awksub_rules Expr
-		= [[T "("; N Expr; T ")"]; [N Num]; [N Expr; N Binop; N Expr]; [N Lvalue];
-		[N Incrop; N Lvalue]; [N Lvalue; N Incrop]]
+		= [[T "("; N Expr; T ")"]; [N Num]; [N Expr; N Binop; N Expr];
+		[N Lvalue]; [N Incrop; N Lvalue]; [N Lvalue; N Incrop]]
 
 (*
 let generate_grammar_rule_list_test2 = 
@@ -117,7 +136,31 @@ let generate_grammar_rule_list_test2 =
 
 let convert_grammar_test0 = (convert_grammar awksub_grammar1)
 *)
-	  
+
+(****************)
+(*** My Tests ***)
+(****************)
+
+let test_1 = (parse_prefix (convert_grammar giant_grammar) accept_empty_suffix
+		["aooogah!"; ","; "khrgh"; ","; "aooogah!"; ","; "ZZZ"])
+	= Some
+   ([(Conversation, [N Sentence; T ","; N Conversation]);
+     (Sentence, [N Shout]); (Shout, [T "aooogah!"]);
+     (Conversation, [N Sentence; T ","; N Conversation]);
+     (Sentence, [N Grunt]); (Grunt, [T "khrgh"]);
+     (Conversation, [N Sentence; T ","; N Conversation]);
+     (Sentence, [N Shout]); (Shout, [T "aooogah!"]);
+     (Conversation, [N Snore]); (Snore, [T "ZZZ"])],
+    [])
+
+let test_2 = (parse_prefix (convert_grammar my_grammar) accept_empty_suffix
+		["("; "++"; "$"; "e"; ")";])
+	= Some
+   ([(Expr, [T "("; N Expr; T ")"]); (Expr, [N Incrop; N Lvalue]);
+     (Incrop, [T "++"]); (Lvalue, [T "$"; N Expr]); (Expr, [N Num]);
+     (Num, [T "e"])],
+    [])
+
 let test0 =
   ((parse_prefix awkish_grammar accept_all ["ouch"]) = None)
 
@@ -191,11 +234,3 @@ let test5 =
       ([(Expr, [N Term; N Binop; N Expr]); (Term, [N Num]); (Num, [T "3"]);
 	(Binop, [T "-"]); (Expr, [N Term]); (Term, [N Num]); (Num, [T "4"])],
        ["+"; "$"; "5"; "-"; "6"]))
-
-let test_1 = (parse_prefix awkish_grammar accept_all ["6"; "+"; "9"])
-	   
-let test1_result =
-  (parse_prefix awkish_grammar accept_all ["9"])
-  
-let test2_result =
-  (parse_prefix awkish_grammar accept_all ["9"; "+"; "$"; "1"; "+"]);;
