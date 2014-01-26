@@ -52,7 +52,7 @@ let rec check_rhs gram rhs acc d frag =
  * any are valid. If one is found, it returns it. If not, it checks the next
  * rule. If none are found (called on an empty list) returns 'None'. *)
 and check_rest gram nt rhs acc d frag =
-	if 		rhs = [] 
+	if		rhs = [] 
 	then 	None 
 	else 	match rhs with
 		| h::t	-> match (check_rhs gram h acc (d@[(nt, h)]) frag) with
