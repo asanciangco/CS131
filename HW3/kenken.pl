@@ -1,5 +1,5 @@
 % Average time for plain_kenken with N=4 example:
-%	~.4		seconds
+%	~1.0	seconds
 % Average time for kenken with N=4 example:	
 %	~<.001	seconds
 
@@ -155,13 +155,13 @@ apply_plain(+(Sum, []), Val, _) :- Val =:= Sum.
 apply_plain(+(Sum, [H | Tail]), Val, T) :-
 	get(H, T, E),
 	NewVal = E + Val,
-	apply(+(Sum, Tail), NewVal, T) .
+	apply_plain(+(Sum, Tail), NewVal, T) .
 
 apply_plain(*(Prod, []), Val, _) :- Val =:= Prod.
 apply_plain(*(Prod, [H | Tail]), Val, T) :-
 	get(H, T, E),
 	NewVal = E * Val,
-	apply(*(Prod, Tail), NewVal, T) .
+	apply_plain(*(Prod, Tail), NewVal, T) .
 
 apply_plain(-(Diff, J, K), T) :-
 	get(J, T, A),
