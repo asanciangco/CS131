@@ -1,0 +1,74 @@
+Version:
+
+va version "1.7.0_51"
+Java(TM) SE Runtime Environment (build 1.7.0_51-b13)
+Java HotSpot(TM) Server VM (build 24.51-b03, mixed mode)
+
+
+CPU Info:
+
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 44
+model name      : Intel(R) Xeon(R) CPU           E5620  @ 2.40GHz
+stepping        : 2
+cpu MHz         : 1596.000
+cache size      : 12288 KB
+physical id     : 1
+siblings        : 8
+core id         : 0
+cpu cores       : 4
+apicid          : 32
+initial apicid  : 32
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 11
+wp              : yes -version
+
+
+Mem info:
+
+MemTotal:       32865796 kB
+MemFree:          586280 kB
+Buffers:          389564 kB
+Cached:         28766040 kB
+SwapCached:          860 kB
+Active:          7153516 kB
+Inactive:       22103992 kB
+Active(anon):      53700 kB
+Inactive(anon):    49428 kB
+Active(file):    7099816 kB
+Inactive(file): 22054564 kB
+Unevictable:         128 kB
+Mlocked:             128 kB
+SwapTotal:      20972816 kB
+SwapFree:       20971232 kB
+Dirty:                 0 kB
+Writeback:             0 kB
+AnonPages:        101472 kB
+Mapped:            29804 kB
+Shmem:              1216 kB
+Slab:            2773516 kB
+SReclaimable:    2595372 kB
+SUnreclaim:       178144 kB
+KernelStack:        4544 kB
+PageTables:        15388 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    37405712 kB
+Committed_AS:     281448 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      335932 kB
+VmallocChunk:   34342230376 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:      8192 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:        4580 kB
+DirectMap2M:     2082816 kB
+DirectMap1G:    31457280 kB

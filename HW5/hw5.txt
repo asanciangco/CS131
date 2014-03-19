@@ -1,0 +1,19 @@
+Upon initial review of the program, I realized that the old "accept"
+functionality had to be replaced with continuations in order to implement
+backtracking.
+
+My initial reacation was to replace all instances of "accept" with a call/cc
+procedure call, implemented properly to achieve the desired results. However,
+after trying to implement this solution, I found that incremental testing was
+nearly impossible and I had no idea if my solution would actually work. It was 
+also difficult to rewrite / add to code that I didn't write initially.
+
+I later realized that each time the "accept" procedure is called, its because
+that procedure found a match. I then redefined accept using a (define ...)
+procedure call that instead of calling an acceptor, it would wrap the solution
+with a continuation to that point and return. 
+
+This new solution was easily implemented in less than 10 lines of code. The 
+redefinition of accept was the main key, then a small entry procedure that
+called the previous implementation of make-matcher with the appropriate
+arguments. 
